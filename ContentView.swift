@@ -8,6 +8,9 @@
 import SwiftUI
 import SceneKit
 
+
+//We are using the MVVM pattern here - basically pairing our data with our view model.
+//A separate class holds all the info for our robots that we use in our grid as well as the detail view which contains the 3D object
 struct ContentView: View {
     
     @State private var contentVM = ContentViewVM()
@@ -15,8 +18,6 @@ struct ContentView: View {
     @EnvironmentObject var authentication: Authentication
     
     let columns: [GridItem] = [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())]
-    
-   
     
     var body: some View {
         NavigationStack {
@@ -61,7 +62,8 @@ struct DetailView: View {
     var robot: RobotModel
     
     var body: some View {
-        SceneView(scene: SCNScene(named: robot.modelName), options: [.allowsCameraControl, .autoenablesDefaultLighting])
+        //The allowsCameraControl property lets us manipulate the camera including pinching the screen to operate zoom in/out
+        SceneView(scene: SCNScene(named: robot.fileName), options: [.allowsCameraControl, .autoenablesDefaultLighting])
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height / 2)
         
         Text(robot.name)

@@ -15,6 +15,7 @@ class LoginViewVM {
     var email: String = ""
     var password: String = ""
     
+    //making sure the user enter the email in a valid format - a@b.com
     var isValidEmail: Bool {
         let emailRegex =  "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
         let emailTest = NSPredicate(format: "SELF MATCHES %@", emailRegex)

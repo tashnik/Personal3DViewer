@@ -11,6 +11,8 @@ struct LoginView: View {
     
     @State var loginViewVM = LoginViewVM()
     
+    @State private var showAlert = false
+    
     @EnvironmentObject var authentication: Authentication
     
     @FocusState private var focus: FocusableField?
@@ -27,6 +29,8 @@ struct LoginView: View {
                     .font(.largeTitle)
                     .accentColor(.primary)
                 
+                //The below modifiers are used to anticipate the user entering an email.
+                //Upon submission the cursor will go to the password field.
                 TextField("Email", text: $loginViewVM.email)
                     .textContentType(.emailAddress)
                     .autocapitalization(.none)
@@ -43,12 +47,16 @@ struct LoginView: View {
                     .onSubmit {
                         if loginViewVM.isValidEmail {
                             authentication.updateValidation()
+                        } else {
+                            showAlert = true
                         }
                     }
                 
                 Button {
                     if loginViewVM.isValidEmail {
                         authentication.updateValidation()
+                    } else {
+                        showAlert = true
                     }
                 } label: {
                     Text("Login")
@@ -58,6 +66,9 @@ struct LoginView: View {
                 .buttonStyle(BlackButton())
                 .shadow(radius: 6)
             }
+            .alert(isPresented: $showAlert, content: {
+                Alert(title: Text("Please enter a valid email"))
+            })
             .padding()
         }
         .textFieldStyle(.roundedBorder)
@@ -75,6 +86,12 @@ struct PasswordField: View {
     @State private var passwordHidden = true
     
     var body: some View {
+        //The below is used to hide/reveal the password while user it entering it.
+        //Another best practice would be to require a minimum letter count along with the inclusion of
+        //special characters or capital letters.
+        //Other best practices include: User Tokens -  would be generated everytime the user logs in.
+        //MFA - Have at leasts 2 forms of authenticaion like and email and SMS.
+        //Using HTTPS protocl when doing API calls during authentication.
         ZStack {
             if passwordHidden {
                 SecureField(title, text: $password)
