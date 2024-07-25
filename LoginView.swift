@@ -45,7 +45,7 @@ struct LoginView: View {
                     .focused($focus, equals: .password)
                     .submitLabel(.go)
                     .onSubmit {
-                        if loginViewVM.isValidEmail {
+                        if loginViewVM.isValidEmail && !loginViewVM.loginDisabled {
                             authentication.updateValidation()
                         } else {
                             showAlert = true
@@ -53,7 +53,7 @@ struct LoginView: View {
                     }
                 
                 Button {
-                    if loginViewVM.isValidEmail {
+                    if loginViewVM.isValidEmail && !loginViewVM.loginDisabled {
                         authentication.updateValidation()
                     } else {
                         showAlert = true
@@ -62,12 +62,11 @@ struct LoginView: View {
                     Text("Login")
                         .bold()
                 }
-                .disabled(loginViewVM.loginDisabled)
                 .buttonStyle(BlackButton())
                 .shadow(radius: 6)
             }
             .alert(isPresented: $showAlert, content: {
-                Alert(title: Text("Please enter a valid email"))
+                Alert(title: Text("Please enter a valid email and/or password (password can be anything 😏)"))
             })
             .padding()
         }
